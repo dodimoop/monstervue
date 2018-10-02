@@ -48,11 +48,10 @@
         </section>
       </sui-segment>
       <sui-segment v-if="turns.length > 0">
-        <th>
+        <h2>LOG ATTACK</h2><br>
           <p v-for="(turn, index) in turns" :key="index">
             {{ turn.text }}
           </p>
-        </th>
       </sui-segment>
     </div>
   </div>
