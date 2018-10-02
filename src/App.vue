@@ -36,10 +36,10 @@
           <sui-button color="green" inverted @click="attack">
             ATTACK
           </sui-button> 
-          <sui-button color="red" inverted @click="specialAttack">
+          <sui-button color="red" inverted>
             SPECIAL ATTACK
           </sui-button>
-          <sui-button :style="{button: 'disabled'}" color="blue" inverted @click="heal">
+          <sui-button :style="{button: 'disabled'}" color="blue" inverted>
             HEAL
           </sui-button>
           <sui-button color="yellow" inverted @click="giveUp">
@@ -69,6 +69,12 @@ export default {
       this.playerHealth = 100
       this.monsterHealth = 100
       
+    },
+    attack() {
+      var max = 3
+      var min = 10
+      var damage = Math.max(Math.floor(Math.random() * max) + 1, min)
+      this.monsterHealth -= damage
     },
     giveUp() {
       this.gameIsRunning = false
