@@ -47,13 +47,7 @@
           </sui-button>
         </section>
       </sui-segment>
-      <sui-segment v-if="turns.length > 0">
-        <th>
-          <p v-for="(turn, index) in turns" :key="index">
-            {{ turn.text }}
-          </p>
-        </th>
-      </sui-segment>
+      <!--  -->
     </div>
   </div>
 </template>
@@ -67,13 +61,19 @@ export default {
       playerHealth: 100,
       monsterHealth: 100,
       gameIsRunning: false,
-      textAlign: 'left',
-      buttonVisibleHeal: 'button',
-      turns: []
     }
   },
   methods: {
-    
+    startGame() {
+      this.gameIsRunning = true
+      this.playerHealth = 100
+      this.monsterHealth = 100
+      
+    },
+    giveUp() {
+      this.gameIsRunning = false
+    }
+
   }
 }
 </script>
