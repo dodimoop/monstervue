@@ -47,7 +47,13 @@
           </sui-button>
         </section>
       </sui-segment>
-      <!--  -->
+      <sui-segment v-if="turns.length > 0">
+        <th>
+          <p v-for="(turn, index) in turns" :key="index">
+            {{ turn.text }}
+          </p>
+        </th>
+      </sui-segment>
     </div>
   </div>
 </template>
@@ -61,6 +67,9 @@ export default {
       playerHealth: 100,
       monsterHealth: 100,
       gameIsRunning: false,
+      textAlign: 'left',
+      buttonVisibleHeal: 'button',
+      turns: []
     }
   },
   methods: {
@@ -68,29 +77,31 @@ export default {
       this.gameIsRunning = true
       this.playerHealth = 100
       this.monsterHealth = 100
-      
+      this.turns = []
     },
     attack() {
-      var max = 3
-      var min = 10
-      var damage = Math.max(Math.floor(Math.random() * max) + 1, min)
+      var damage = this.calculateDamage(3, 10)
       this.monsterHealth -= damage
-
-      max = 3
-      min = 10
-      damage = Math.max(Math.floor(Math.random() * max) + 1, min)
-      this.playerHealth -= damage
+      this.turns.unshift({
+        isPlayer: true,
+        text: 'Player Hits Player for ' + damage
+      })
+      if (this.checkWin()) {
+        return
+      }
+      this.monsterAttacks()
     },
     specialAttack() {
-      var max = 10
-      var min = 20
-      var damage = Math.max(Math.floor(Math.random() * max) + 1, min)
+      var damage = this.calculateDamage(10, 20)
       this.monsterHealth -= damage
-
-      max = 10
-      min = 20
-      damage = Math.max(Math.floor(Math.random() * max) + 1, min)
-      this.playerHealth -= damage
+      this.turns.unshift({
+        isPlayer: true,
+        text: 'Player Hits Monster hard for ' + damage
+      })
+      if (this.checkWin()) {
+        return
+      }
+      this.monsterAttacks()
     },
     heal() {
       if (this.playerHealth <= 90) {
@@ -98,9 +109,44 @@ export default {
       } else {
         this.playerHealth = 100;
       }
+      this.turns.unshift({
+        isPlayer: true,
+        text: 'Player Heals for 10'
+      })
+      // this.monsterAttacks()
     },
     giveUp() {
       this.gameIsRunning = false
+    },
+    monsterAttacks() {
+      var damage = this.calculateDamage(5, 12)
+      this.playerHealth -= damage
+      this.checkWin()
+      this.turns.unshift({
+        isPlayer: false,
+        text: 'Monster Hits Player for ' + damage
+      })
+    },
+    calculateDamage(max, min) {
+      return Math.max(Math.floor(Math.random() * max) + 1, min)
+    },
+    checkWin() {
+      if (this.monsterHealth <= 0){
+        if (confirm('You Won! New Game?')) {
+          this.startGame();
+        } else {
+          this.gameIsRunning = false
+        }
+        return true
+      } else if (this.playerHealth <= 0) {
+        if (confirm('You Lost! New Game?')) {
+          this.startGame();
+        } else {
+          this.gameIsRunning = false
+        }
+        return true
+      }
+      return false
     }
 
   }
